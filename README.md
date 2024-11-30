@@ -1,3 +1,11 @@
+# Habits to add
+
+- Brush your teeth
+- Go to the gym
+- Do visualization with:
+  - I earn $50.000/month
+  - I am disciplined
+
 # sv
 
 Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
