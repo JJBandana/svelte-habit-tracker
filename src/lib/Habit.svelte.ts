@@ -1,14 +1,14 @@
 import { SvelteMap } from "svelte/reactivity";
 
 class Habit {
-  private _name: string = $state("None");
+  private _name: string = $state("New Habit");
   private _id;
   createDate = new Date();
   calendar: SvelteMap<string, boolean>;
 
-  constructor(name = "Habit") {
+  constructor(name = "New Habit") {
     this._id = Date.now();
-    this.calendar = getYearDays(this.createDate);
+    this.calendar = createCalendar(this.createDate);
     this._name = name;
   }
 
@@ -23,24 +23,59 @@ class Habit {
   get id() {
     return this._id;
   }
-}
 
-function getYearDays(date: Date) {
-  const currentYear = date.getFullYear();
-  const firstDay = new Date(currentYear, 0, 1);
-  const lastDay = new Date(currentYear + 1, 0, 1);
+  clone() {
+    const newHabit = new Habit(this._name);
+    newHabit._id = this._id;
+    newHabit.calendar = this.calendar;
+    newHabit.createDate = this.createDate;
 
-  let currentDay = new Date(firstDay);
-  let yearDays: SvelteMap<string, boolean> = new SvelteMap();
-
-  while (currentDay < lastDay) {
-    const dateStr = currentDay.toLocaleDateString("en-CA");
-    yearDays.set(dateStr, false);
-
-    currentDay.setDate(currentDay.getDate() + 1);
+    return newHabit;
   }
 
-  return yearDays;
+  completedToday() {
+    const today = new Date();
+    return this.calendar.get(today.toLocaleDateString("en-CA"));
+  }
+}
+
+function createCalendar(actualDate: Date) {
+  let startDate = new Date(actualDate);
+  startDate.setFullYear(actualDate.getFullYear() - 1);
+
+  // Arrange the calendar to start in sunday
+  let startDay = startDate.getDay();
+  let daysToSunday = startDay === 0 ? 0 : startDay;
+  startDate.setDate(startDate.getDate() - daysToSunday);
+
+  // Arrange the calendar to end in saturday
+  let finalDay = actualDate.getDay();
+  console.group("Dates");
+  console.log("finalDay", finalDay);
+  let daysToSaturday = finalDay === 6 ? 0 : 6 - finalDay;
+  console.log("daysToSaturday", daysToSaturday);
+  let finalDate = new Date(actualDate);
+  finalDate.setDate(actualDate.getDate() + daysToSaturday);
+  console.log("actualDate", actualDate);
+  console.log("actualDate + DaysToSaturday: ", finalDate);
+
+  let calendar: SvelteMap<string, boolean> = new SvelteMap();
+  let tempDate = new Date(startDate);
+
+  // .setHours(0, 0, 0, 0) and .getTime() to avoid errors when comparing
+  tempDate.setHours(0, 0, 0, 0);
+  finalDate.setHours(0, 0, 0, 0);
+
+  while (tempDate.getTime() <= finalDate.getTime()) {
+    const dateStr = tempDate.toLocaleDateString("en-CA");
+    calendar.set(dateStr, false);
+    tempDate.setDate(tempDate.getDate() + 1);
+    console.log(tempDate.getTime() == finalDate.getTime());
+  }
+
+  console.log("tempDate", tempDate.toLocaleDateString("en-CA"));
+  console.groupEnd();
+  return calendar;
 }
 
 export default Habit;

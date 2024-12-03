@@ -1,30 +1,18 @@
 <script lang="ts">
   import Habit from "$lib/Habit.svelte";
+  import Check from "../../icons/Check.svelte";
+  import Uncheck from "../../icons/Uncheck.svelte";
 
   interface Props {
-    habit: Habit,
-    handleDelete: Function
+    habit: Habit;
+    today: string;
+    handleDelete: (id: number) => void;
+    toggleEdit: (id: number) => void;
   }
 
-  let { habit, handleDelete } : Props = $props()
-
-  let isRenaming = $state(false);
-  let newName = $state(habit.name)
-
-  const toggleRename = () => {
-    isRenaming = !isRenaming
-    
-    if (!isRenaming) {
-      habit.name = newName
-    }
-  }
+  let { habit, handleDelete, today, toggleEdit } : Props = $props()
   
-  habit.calendar.set("2024-11-05", true)
-  console.table(habit.calendar)
-
-
-  const getToday = (): string => new Date().toLocaleDateString("en-CA");
-  const today = getToday();
+  console.table(habit.calendar.entries().next().value)
 
   function toggleToday(){
     const state = habit.calendar.get(today)
@@ -40,14 +28,21 @@
 <div class="habit">
   <div class="container">
     <h1>{habit.name}</h1>
-    <button onclick={toggleToday}>{habit.calendar.get(new Date().toLocaleDateString("en-CA"))? "Un-check" : "Check"}</button>
+    <button onclick={toggleToday}>
+      {#if !habit.completedToday()}
+        <Check />
+      {:else}
+        <Uncheck />
+      {/if}
+    </button>
     <button onclick={() => handleDelete(habit.id)}>Delete</button>
-    <textarea class={`rename ${isRenaming ? "open" : ""}`} name="rename" id="rename" bind:value={newName}></textarea>
-    <button onclick={() => toggleRename()}>rename</button>
+    <!-- <textarea class:open={isRenaming} class="rename" name="rename" id="rename" bind:value={newName}></textarea> -->
+    <button onclick={() => toggleEdit(habit.id)}>rename</button>
   </div>
+
   <div class="calendar">
     {#each habit.calendar as [date, value]}
-      <div class={`day ${value ? "on": ""}`} title={date}></div>
+      <div class:on={value} class="day" title={date}></div>
     {/each}
   </div>
 </div>
@@ -59,23 +54,6 @@
     }
   }
 
-  textarea {
-    resize: none;
-    box-sizing: border-box;
-    border: none;
-    padding: 0;
-  }
-
-  textarea.rename {
-    width: 0;
-    transition: width .3s ease;
-  }
-
-  textarea.open {
-    width: 100px;
-    transition: width .3s ease;
-  }
-
   .container {
     height: min-content;
     display: flex;
@@ -84,13 +62,13 @@
   }
 
   .habit {
-    background-color: rgb(15, 46, 141);
+    background-color: hsl(240, 70%, 12%);
     color: white;
   }
 
   .calendar {
     padding-block: 4px;
-    background-color: rgb(15, 46, 141);
+    background-color: hsl(240, 70%, 12%);
     display: grid;
     grid-auto-flow: column;
     grid-template-rows: repeat(7, 14px);
@@ -101,15 +79,18 @@
   }
 
   .day {
-    background-color: rgb(179, 0, 255);
+    background-color: #18381A;
     border-radius: 3px;
     width: 14px;
     height: 14px;
-    border: rgb(137, 38, 179) solid 1px;
-    transition: background-color 0.3s ease;
+    border: #0e200f solid 1px;
+    transition-property: background-color, border;
+    transition-duration: .3s;
+    transition-timing-function: ease-in-out;
   }
 
   .day.on {
     background-color: #4CAF50;
+    border: #205e22 solid 1px;
   }
 </style>
