@@ -2,9 +2,10 @@
   import HabitComponent from "./HabitComponent.svelte";
   import Habit from "$lib/Habit.svelte";
   import Modal from "./Modal.svelte";
+  import Calendar from "./Calendar.svelte";
 
   let habits = $state<Habit[]>([])
-  let showModal = $state(false)
+  let showModal = $state(true)
   let newHabitName = $state("")
 
   let foundHabit: Habit | undefined = $state();
@@ -17,7 +18,6 @@
 
   const updateHabit = (updatedHabit: Habit) => {
     const index = habits.findIndex(habit => habit.id === updatedHabit.id)
-    console.log("Look at me daddy!")
     habits[index] = updatedHabit
   }
 

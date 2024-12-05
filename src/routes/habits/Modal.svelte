@@ -1,5 +1,6 @@
 <script lang="ts">
   import type Habit from "$lib/Habit.svelte";
+  import Calendar from "./Calendar.svelte";
 
   interface Props {
     showModal: boolean;
@@ -36,9 +37,13 @@ onclose={() => (showModal = false)}
   <button onclick={() => dialog.close()}>close modal</button>
   <form method="dialog" {onsubmit}>
     {#if editedHabit}
-      <input type="text" bind:value={editedHabit.name}> <!-- EDITAR AQUI -->
-
+      <input type="text" bind:value={editedHabit.name}>
     {/if}
     <button type="submit">Submit</button>
+    <button onclick={(e) => e.preventDefault()}>Calendar</button>
   </form>
+
+  {#if foundHabit}
+    <Calendar {foundHabit} />
+  {/if}
 </dialog>

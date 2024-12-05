@@ -33,6 +33,10 @@ class Habit {
     return newHabit;
   }
 
+  isComplete(date: string) {
+    return this.calendar.get(date);
+  }
+
   completedToday() {
     const today = new Date();
     return this.calendar.get(today.toLocaleDateString("en-CA"));
@@ -40,41 +44,26 @@ class Habit {
 }
 
 function createCalendar(actualDate: Date) {
+  // .setHours(0, 0, 0, 0) to avoid errors when comparing
+  actualDate.setHours(0, 0, 0, 0);
+
   let startDate = new Date(actualDate);
   startDate.setFullYear(actualDate.getFullYear() - 1);
 
   // Arrange the calendar to start in sunday
-  let startDay = startDate.getDay();
-  let daysToSunday = startDay === 0 ? 0 : startDay;
-  startDate.setDate(startDate.getDate() - daysToSunday);
+  startDate.setDate(startDate.getDate() - startDate.getDay());
 
   // Arrange the calendar to end in saturday
-  let finalDay = actualDate.getDay();
-  console.group("Dates");
-  console.log("finalDay", finalDay);
-  let daysToSaturday = finalDay === 6 ? 0 : 6 - finalDay;
-  console.log("daysToSaturday", daysToSaturday);
   let finalDate = new Date(actualDate);
-  finalDate.setDate(actualDate.getDate() + daysToSaturday);
-  console.log("actualDate", actualDate);
-  console.log("actualDate + DaysToSaturday: ", finalDate);
+  finalDate.setDate(actualDate.getDate() + (6 - actualDate.getDay()));
 
   let calendar: SvelteMap<string, boolean> = new SvelteMap();
-  let tempDate = new Date(startDate);
 
-  // .setHours(0, 0, 0, 0) and .getTime() to avoid errors when comparing
-  tempDate.setHours(0, 0, 0, 0);
-  finalDate.setHours(0, 0, 0, 0);
-
-  while (tempDate.getTime() <= finalDate.getTime()) {
-    const dateStr = tempDate.toLocaleDateString("en-CA");
-    calendar.set(dateStr, false);
-    tempDate.setDate(tempDate.getDate() + 1);
-    console.log(tempDate.getTime() == finalDate.getTime());
+  while (startDate.getTime() <= finalDate.getTime()) {
+    calendar.set(startDate.toLocaleDateString("en-CA"), false);
+    startDate.setDate(startDate.getDate() + 1);
   }
 
-  console.log("tempDate", tempDate.toLocaleDateString("en-CA"));
-  console.groupEnd();
   return calendar;
 }
 

@@ -12,8 +12,6 @@
 
   let { habit, handleDelete, today, toggleEdit } : Props = $props()
   
-  console.table(habit.calendar.entries().next().value)
-
   function toggleToday(){
     const state = habit.calendar.get(today)
     const confirmed = !state || confirm("Are you sure you want to uncheck today?")
