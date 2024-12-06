@@ -10,8 +10,13 @@
   const today = new SvelteDate()
   const todayFixed = new Date()
 
+  // I HAVE TO FIX THESE 2 NEXT LINES!
+  const [firstHabitDateString] = foundHabit.calendar.entries().next().value || []
+  const firstHabitDate : Date = new Date(firstHabitDateString || "2024-01-01")
+
   const createCalendar = (todaysDate: Date, habitCalendar: SvelteMap<string, boolean>) => {
     const daysArray = []
+
 
     const currentMonth = todaysDate.getMonth()
     const currentYear = todaysDate.getFullYear()
@@ -20,15 +25,16 @@
     let aux = new Date(firstDay)
     aux.setDate(aux.getDate() - (firstDay.getDay() || 7))
 
-    const availableMonth = (date: Date, today: Date, month: number) : boolean => {
-      return date.getMonth() === month && date.getTime() < today.getTime()
+    // I HAVE TO FIX THIS PART OF firstHabitDate.
+    const availableMonth = (firstHabitDate: Date, date: Date, today: Date, month: number) : boolean => {
+      return date.getMonth() === month && date.getTime() < today.getTime() && date.getTime() > firstHabitDate.getTime()
     }
 
     for (let i = 0; i < 42; i++) {
       daysArray.push({
         day: aux.toLocaleDateString("en-CA"),
         isCompleted: habitCalendar.get(aux.toLocaleDateString("en-CA")),
-        isCurrentMonth: availableMonth(aux, todayFixed, currentMonth)
+        isCurrentMonth: availableMonth(firstHabitDate, aux, todayFixed, currentMonth)
       })
       aux.setDate(aux.getDate() + 1)
     }
@@ -72,11 +78,10 @@
         class:done={isCompleted}
         disabled={!isCurrentMonth}
         onclick={() => {
-          const value = foundHabit.calendar.get(day)
-
-          // if (value) {
+          if (foundHabit.calendar.has(day)){
+            const value = foundHabit.calendar.get(day)
             foundHabit.calendar.set(day, !value)
-          // }
+          }
         }}
         >{+day.split("-")[2]}</button>
       {/each}

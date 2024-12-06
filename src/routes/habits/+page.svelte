@@ -1,64 +1,63 @@
 <script lang="ts">
   import HabitComponent from "./HabitComponent.svelte";
   import Habit from "$lib/Habit.svelte";
-  import Modal from "./Modal.svelte";
+  import { getHabitState } from "$lib/state.svelte";
+  import Modal2 from "$lib/components/Modal2.svelte";
   import Calendar from "./Calendar.svelte";
+  import CreateForm from "./CreateForm.svelte";
 
-  let habits = $state<Habit[]>([])
-  let showModal = $state(true)
-  let newHabitName = $state("")
+  const habitState = getHabitState()
+  const today = new Date().toLocaleDateString("en-CA");
 
+  let modalState = $state<boolean>(false)
   let foundHabit: Habit | undefined = $state();
+
   const toggleEdit = (id:number) => {
-    foundHabit = habits.find(habit => habit.id === id)
+    foundHabit = habitState.habits.find(habit => habit.id === id)?.clone()
     if (foundHabit) {
-      showModal = true
+      modalState = true
     }
   }
 
   const updateHabit = (updatedHabit: Habit) => {
-    const index = habits.findIndex(habit => habit.id === updatedHabit.id)
-    habits[index] = updatedHabit
+    const index = habitState.habits.findIndex(habit => habit.id === updatedHabit.id)
+    habitState.habits[index] = updatedHabit
   }
 
-  const deleteHabit = (id: number) => {
-    if (confirm("Are you sure you want to delete this habit?")) {
-      habits = habits.filter(habit => habit.id !== id)
-    }
-  }
-
-  const getToday = (): string => new Date().toLocaleDateString("en-CA");
-  const today = getToday();
-  
-  const onsubmit = (e: SubmitEvent) => {
-    e.preventDefault()
-    if (newHabitName.trim() !== "") {
-      const newHabit = new Habit(newHabitName);
-      habits = [...habits, newHabit]
-      newHabitName = ""
-    } else {
-      alert("The habit name can not be an empty string")
+  const onsubmit = () => {
+    if (foundHabit) {
+      updateHabit(foundHabit)
     }
   }
 </script>
 
-<form {onsubmit}>
-  <input type="text" name="habit-name" id="habit-name" placeholder="New Habit Name" bind:value={newHabitName}>
-  <button type="submit">Add</button>
-</form>
+<CreateForm {habitState} />
 
-{#if showModal}
-  <Modal bind:showModal {foundHabit} {updateHabit} />
-{/if}
+<Modal2 bind:modalState>
+  <form method="dialog" {onsubmit}>
+    {#if foundHabit}
+      <input type="text" bind:value={foundHabit.name}>
+    {/if}
+    <button type="submit">Submit</button>
+    <button onclick={(e) => e.preventDefault()}>Calendar</button>
+    <!-- TO-DO ⬆️⬆️⬆️ calendar btn -->
+  </form>
+
+  {#if foundHabit}
+    <Calendar {foundHabit} />
+  {/if}
+  
+</Modal2>
+
 
 <div id="habits">
   <h1>Habits</h1>
   <hr>
-  {#each habits as habit}
+  {#each habitState.habits as habit}
     <HabitComponent
     {habit}
     {today}
-    handleDelete={(id : number) => deleteHabit(id)}
+    handleDelete={(id : number) => habitState.remove(id)}
     toggleEdit={(id: number) => toggleEdit(id)}
     />
   {/each}

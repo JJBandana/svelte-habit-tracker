@@ -24,7 +24,11 @@ class Habit {
     return this._id;
   }
 
-  clone() {
+  toggleDate(str: string) {
+    this.calendar.set(str, !this.calendar.get(str));
+  }
+
+  clone(): Habit {
     const newHabit = new Habit(this._name);
     newHabit._id = this._id;
     newHabit.calendar = this.calendar;
@@ -33,13 +37,8 @@ class Habit {
     return newHabit;
   }
 
-  isComplete(date: string) {
-    return this.calendar.get(date);
-  }
-
-  completedToday() {
-    const today = new Date();
-    return this.calendar.get(today.toLocaleDateString("en-CA"));
+  isComplete(date: string): boolean {
+    return this.calendar.get(date) || false;
   }
 }
 

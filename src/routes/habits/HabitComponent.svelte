@@ -11,30 +11,20 @@
   }
 
   let { habit, handleDelete, today, toggleEdit } : Props = $props()
-  
-  function toggleToday(){
-    const state = habit.calendar.get(today)
-    const confirmed = !state || confirm("Are you sure you want to uncheck today?")
-
-    if (confirmed) {
-      habit.calendar.set(today, !state)
-    }
-  }
 
 </script>
 
 <div class="habit">
   <div class="container">
     <h1>{habit.name}</h1>
-    <button onclick={toggleToday}>
-      {#if !habit.completedToday()}
+    <button onclick={() => habit.calendar.set(today, !habit.calendar.get(today))}>
+      {#if !habit.isComplete(today)}
         <Check />
       {:else}
         <Uncheck />
       {/if}
     </button>
     <button onclick={() => handleDelete(habit.id)}>Delete</button>
-    <!-- <textarea class:open={isRenaming} class="rename" name="rename" id="rename" bind:value={newName}></textarea> -->
     <button onclick={() => toggleEdit(habit.id)}>rename</button>
   </div>
 
