@@ -49,10 +49,9 @@
   
 </Modal2>
 
-
-<div id="habits">
-  <h1>Habits</h1>
-  <hr>
+<h1>Habits</h1>
+<hr>
+<div class="habits">
   {#each habitState.habits as habit}
     <HabitComponent
     {habit}
@@ -62,6 +61,16 @@
     />
   {/each}
 </div>
+
+<style>
+  .habits {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+    margin-inline: 16px;
+  }
+</style>
 
 
 

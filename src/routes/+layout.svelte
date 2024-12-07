@@ -15,6 +15,13 @@
 {@render children()}
 
 <style>
+  :global {
+    * {
+      font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+    }
+  }
+
+
   nav {
     display: inline-flex;
     gap: 36px;
