@@ -1,6 +1,6 @@
 import { getContext, setContext } from "svelte";
-import type Habit from "./Habit.svelte";
-import type { Todo } from "./Todo.svelte";
+import { Habit } from "./Habit.svelte";
+import { Todo } from "./Todo.svelte";
 
 export class HabitState {
   habits = $state<Habit[]>([]);
@@ -42,8 +42,13 @@ export class TodoState {
   }
 
   toggle(id: number) {
+    console.log("Toggling", id);
     const index = this.todos.findIndex((todo) => todo.id === id);
-    this.todos[index].done = !this.todos[index].done;
+    if (index !== -1) {
+      const foundTodo = this.todos[index].clone();
+      foundTodo.completed = !foundTodo.completed;
+      this.todos[index] = foundTodo.clone();
+    }
   }
 
   update(todo: Todo) {

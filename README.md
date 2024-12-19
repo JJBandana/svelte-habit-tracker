@@ -1,3 +1,5 @@
+![Goal](https://cdn.dribbble.com/userupload/3710024/file/original-9369999e0521eeeacfb089ebc6156a7a.png?resize=1024x768&vertical=center)
+
 # Habits to add
 
 - Brush your teeth
@@ -5,6 +7,12 @@
 - Do visualization with:
   - I earn $50.000/month
   - I am disciplined
+
+# Project description
+
+This is an habit tracker with a to-do app based on "How to manage your time by Ryan Tracy"
+
+We will create todos with dueDate and 3 priority levels.
 
 # sv
 

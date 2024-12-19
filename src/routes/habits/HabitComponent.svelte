@@ -1,8 +1,10 @@
 <script lang="ts">
-  import Habit from "$lib/Habit.svelte";
+  import { Habit } from "$lib/Habit.svelte";
   import { onMount } from "svelte";
   import Check from "../../icons/Check.svelte";
   import Uncheck from "../../icons/Uncheck.svelte";
+  import Trash from "../../icons/Trash.svelte";
+  import Edit from "../../icons/Edit.svelte";
 
   interface Props {
     habit: Habit;
@@ -11,7 +13,7 @@
     toggleEdit: (id: number) => void;
   }
 
-  let { habit, handleDelete, today, toggleEdit } : Props = $props()
+  let { habit, handleDelete, today, toggleEdit }: Props = $props();
 
   let calendar = $state() as HTMLDivElement;
   let isDragging = false;
@@ -23,8 +25,7 @@
     if (calendar) {
       isScrollable = calendar.scrollWidth > calendar.clientWidth;
     }
-    console.log("isScrollable", isScrollable)
-  }
+  };
 
   function startDrag(event: MouseEvent | TouchEvent) {
     if (!calendar || !isScrollable) return;
@@ -35,7 +36,7 @@
     scrollLeft = calendar.scrollLeft;
 
     if (calendar) {
-      calendar.style.cursor = event instanceof TouchEvent ? '' : 'grabbing';
+      calendar.style.cursor = event instanceof TouchEvent ? "" : "grabbing";
     }
   }
 
@@ -52,47 +53,71 @@
   function stopDragging() {
     isDragging = false;
     if (calendar) {
-        calendar.style.cursor = isScrollable ? 'grab' : 'default';
+      calendar.style.cursor = isScrollable ? "grab" : "default";
     }
   }
 
+  function focusDay(date: string) {
+    const dayElement = calendar?.querySelector(`[title="${date}"]`);
+    if (dayElement) {
+      dayElement.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center",
+      });
+    }
+  }
+
+  function toggleDay(date: string) {
+    habit.calendar.set(date, !habit.calendar.get(date));
+    focusDay(date);
+  }
+
   onMount(() => {
-    checkScrollable();    
-    window.addEventListener('resize', checkScrollable);
+    checkScrollable();
+
+    if (calendar) {
+      calendar.scrollLeft = calendar.scrollWidth;
+    }
+    window.addEventListener("resize", checkScrollable);
     return () => {
-      window.removeEventListener('resize', checkScrollable);
+      window.removeEventListener("resize", checkScrollable);
     };
   });
-
 </script>
 
 <div class="habit">
   <div class="container">
     <h1>{habit.name}</h1>
     <div class="buttons">
-    <button onclick={() => habit.calendar.set(today, !habit.calendar.get(today))}>
-      {#if !habit.isComplete(today)}
-        <Check />
-      {:else}
-        <Uncheck />
-      {/if}
-    </button>
-    <button onclick={() => handleDelete(habit.id)}>Delete</button>
-    <button onclick={() => toggleEdit(habit.id)}>rename</button>
+      <button class="button" onclick={() => toggleDay(today)}>
+        {#if !habit.isComplete(today)}
+          <Check />
+        {:else}
+          <Uncheck />
+        {/if}
+      </button>
+      <button class="button" onclick={() => handleDelete(habit.id)}
+        ><Trash /></button
+      >
+      <button class="button" onclick={() => toggleEdit(habit.id)}
+        ><Edit /></button
+      >
     </div>
   </div>
 
   <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div class="calendar" class:grabbable={isScrollable}
-  bind:this={calendar}
-  onmouseup={stopDragging}
-  onmouseleave={stopDragging}
-  onmousedown={startDrag}
-  onmousemove={onMove}
-
-  ontouchstart={startDrag}
-  ontouchmove={onMove}
-  ontouchend={stopDragging}
+  <div
+    class="calendar"
+    class:grabbable={isScrollable}
+    bind:this={calendar}
+    onmouseup={stopDragging}
+    onmouseleave={stopDragging}
+    onmousedown={startDrag}
+    onmousemove={onMove}
+    ontouchstart={startDrag}
+    ontouchmove={onMove}
+    ontouchend={stopDragging}
   >
     {#each habit.calendar as [date, value]}
       <div class:on={value} class="day" title={date}></div>
@@ -109,6 +134,21 @@
 
   .buttons {
     display: flex;
+    gap: 6px;
+  }
+
+  .button {
+    box-sizing: content-box;
+    border: none;
+    width: 24px;
+    height: 24px;
+    padding: 4px;
+    border-radius: 8px;
+    &:hover {
+      background-color: red;
+      color: white;
+      cursor: pointer;
+    }
   }
 
   .container {
@@ -143,7 +183,6 @@
     gap: 2px;
     overflow-x: hidden;
     width: 100%;
-    box-sizing: border-box;
     cursor: default;
 
     &.grabbable {
@@ -162,12 +201,12 @@
     height: 14px;
     border: #004f69 solid 1px;
     transition-property: background-color, border;
-    transition-duration: .3s;
+    transition-duration: 0.3s;
     transition-timing-function: ease-in-out;
   }
 
   .day.on {
     background-color: #0099cc;
-    border: #00BFFF solid 1px;
+    border: #00bfff solid 1px;
   }
 </style>

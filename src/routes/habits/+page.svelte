@@ -1,34 +1,64 @@
 <script lang="ts">
   import HabitComponent from "./HabitComponent.svelte";
-  import Habit from "$lib/Habit.svelte";
   import { getHabitState } from "$lib/state.svelte";
   import Modal2 from "$lib/components/Modal2.svelte";
   import Calendar from "./Calendar.svelte";
   import CreateForm from "./CreateForm.svelte";
+  import { SvelteMap } from "svelte/reactivity";
+  import { Habit, type IHabit } from "$lib/Habit.svelte";
 
-  const habitState = getHabitState()
+  const habitState = getHabitState();
   const today = new Date().toLocaleDateString("en-CA");
 
-  let modalState = $state<boolean>(false)
+  let modalState = $state<boolean>(false);
   let foundHabit: Habit | undefined = $state();
 
-  const toggleEdit = (id:number) => {
-    foundHabit = habitState.habits.find(habit => habit.id === id)?.clone()
+  const toggleEdit = (id: number) => {
+    foundHabit = habitState.habits.find((habit) => habit.id === id)?.clone();
     if (foundHabit) {
-      modalState = true
+      modalState = true;
     }
-  }
+  };
 
   const updateHabit = (updatedHabit: Habit) => {
-    const index = habitState.habits.findIndex(habit => habit.id === updatedHabit.id)
-    habitState.habits[index] = updatedHabit
-  }
+    const index = habitState.habits.findIndex(
+      (habit) => habit.id === updatedHabit.id
+    );
+    habitState.habits[index] = updatedHabit;
+  };
 
   const onsubmit = () => {
     if (foundHabit) {
-      updateHabit(foundHabit)
+      updateHabit(foundHabit);
     }
-  }
+  };
+
+  $effect(() => {
+    const savedHabits = localStorage.getItem("habits");
+    console.log(savedHabits);
+
+    if (savedHabits) {
+      const habits: IHabit[] = JSON.parse(savedHabits);
+
+      habitState.habits = habits.map((habit) => {
+        const calendarMap = new SvelteMap<string, boolean>(
+          Object.entries(habit.calendar)
+        );
+        return new Habit(habit.name, habit.id, habit.createDate, calendarMap);
+      });
+    }
+  });
+
+  $effect(() => {
+    const habitsToSave = habitState.habits.map((habit) => ({
+      ...habit,
+      calendar: Object.fromEntries(habit.calendar),
+    }));
+
+    localStorage.setItem("habits", JSON.stringify(habitsToSave));
+  });
+
+  $inspect(habitState.habits);
 </script>
 
 <CreateForm {habitState} />
@@ -36,7 +66,7 @@
 <Modal2 bind:modalState>
   <form method="dialog" {onsubmit}>
     {#if foundHabit}
-      <input type="text" bind:value={foundHabit.name}>
+      <input type="text" bind:value={foundHabit.name} />
     {/if}
     <button type="submit">Submit</button>
     <button onclick={(e) => e.preventDefault()}>Calendar</button>
@@ -46,18 +76,17 @@
   {#if foundHabit}
     <Calendar {foundHabit} />
   {/if}
-  
 </Modal2>
 
 <h1>Habits</h1>
-<hr>
+<hr />
 <div class="habits">
   {#each habitState.habits as habit}
     <HabitComponent
-    {habit}
-    {today}
-    handleDelete={(id : number) => habitState.remove(id)}
-    toggleEdit={(id: number) => toggleEdit(id)}
+      {habit}
+      {today}
+      handleDelete={(id: number) => habitState.remove(id)}
+      toggleEdit={(id: number) => toggleEdit(id)}
     />
   {/each}
 </div>
@@ -71,6 +100,3 @@
     margin-inline: 16px;
   }
 </style>
-
-
-

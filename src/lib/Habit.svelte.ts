@@ -1,27 +1,28 @@
 import { SvelteMap } from "svelte/reactivity";
 
-class Habit {
-  private _name: string = $state("New Habit");
-  private _id;
-  createDate = new Date();
+export interface IHabit {
+  id: number;
+  name: string;
+  calendar: Map<string, boolean>;
+  createDate: Date;
+}
+
+export class Habit {
+  name: string;
+  id;
+  createDate;
   calendar: SvelteMap<string, boolean>;
 
-  constructor(name = "New Habit") {
-    this._id = Date.now();
-    this.calendar = createCalendar(this.createDate);
-    this._name = name;
-  }
-
-  get name() {
-    return this._name;
-  }
-
-  set name(name) {
-    this._name = name;
-  }
-
-  get id() {
-    return this._id;
+  constructor(
+    name = "New Habit",
+    id: number = Date.now(),
+    createDate: Date = new Date(),
+    calendar: SvelteMap<string, boolean> | undefined = undefined
+  ) {
+    this.id = id;
+    this.name = name;
+    this.createDate = createDate;
+    this.calendar = calendar || createCalendar(this.createDate);
   }
 
   toggleDate(str: string) {
@@ -29,8 +30,8 @@ class Habit {
   }
 
   clone(): Habit {
-    const newHabit = new Habit(this._name);
-    newHabit._id = this._id;
+    const newHabit = new Habit(this.name);
+    newHabit.id = this.id;
     newHabit.calendar = this.calendar;
     newHabit.createDate = this.createDate;
 
@@ -65,5 +66,3 @@ function createCalendar(actualDate: Date) {
 
   return calendar;
 }
-
-export default Habit;
