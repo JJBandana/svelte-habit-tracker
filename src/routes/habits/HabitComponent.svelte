@@ -137,20 +137,6 @@
     gap: 6px;
   }
 
-  .button {
-    box-sizing: content-box;
-    border: none;
-    width: 24px;
-    height: 24px;
-    padding: 4px;
-    border-radius: 8px;
-    &:hover {
-      background-color: red;
-      color: white;
-      cursor: pointer;
-    }
-  }
-
   .container {
     display: flex;
     flex-direction: row;

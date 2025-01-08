@@ -61,42 +61,53 @@
   $inspect(habitState.habits);
 </script>
 
-<CreateForm {habitState} />
+<div class="container">
+  <h1 class="title">Habits</h1>
+  <CreateForm {habitState} />
 
-<Modal2 bind:modalState>
-  <form method="dialog" {onsubmit}>
+  <Modal2 bind:modalState>
+    <form method="dialog" {onsubmit}>
+      {#if foundHabit}
+        <input type="text" bind:value={foundHabit.name} />
+      {/if}
+      <button type="submit">Submit</button>
+      <button onclick={(e) => e.preventDefault()}>Calendar</button>
+      <!-- TO-DO ⬆️⬆️⬆️ calendar btn -->
+    </form>
+
     {#if foundHabit}
-      <input type="text" bind:value={foundHabit.name} />
+      <Calendar {foundHabit} />
     {/if}
-    <button type="submit">Submit</button>
-    <button onclick={(e) => e.preventDefault()}>Calendar</button>
-    <!-- TO-DO ⬆️⬆️⬆️ calendar btn -->
-  </form>
+  </Modal2>
 
-  {#if foundHabit}
-    <Calendar {foundHabit} />
-  {/if}
-</Modal2>
-
-<h1>Habits</h1>
-<hr />
-<div class="habits">
-  {#each habitState.habits as habit}
-    <HabitComponent
-      {habit}
-      {today}
-      handleDelete={(id: number) => habitState.remove(id)}
-      toggleEdit={(id: number) => toggleEdit(id)}
-    />
-  {/each}
+  <div class="habits">
+    {#each habitState.habits as habit}
+      <HabitComponent
+        {habit}
+        {today}
+        handleDelete={(id: number) => habitState.remove(id)}
+        toggleEdit={(id: number) => toggleEdit(id)}
+      />
+    {/each}
+  </div>
 </div>
 
 <style>
+  .container {
+    width: 70%;
+    margin: 40px auto;
+  }
+
   .habits {
     display: flex;
     flex-direction: column;
     gap: 4px;
     align-items: center;
-    margin-inline: 16px;
+
+    margin-top: 20px;
+  }
+
+  .title {
+    font-size: 3rem;
   }
 </style>

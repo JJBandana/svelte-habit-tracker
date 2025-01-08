@@ -1,12 +1,17 @@
 ![Goal](https://cdn.dribbble.com/userupload/3710024/file/original-9369999e0521eeeacfb089ebc6156a7a.png?resize=1024x768&vertical=center)
 
-# Habits to add
+# Todo
 
-- Brush your teeth
-- Go to the gym
-- Do visualization with:
-  - I earn $50.000/month
-  - I am disciplined
+- Add responsive desgin:
+
+  - Create special navbar for phone.
+
+- UX/UI:
+
+  - Add animations to the todo list
+  - When a task is done, move it to a "done" category.
+
+- Fix habit calendar when updating date.
 
 # Project description
 

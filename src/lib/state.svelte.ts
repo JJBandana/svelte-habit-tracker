@@ -42,7 +42,6 @@ export class TodoState {
   }
 
   toggle(id: number) {
-    console.log("Toggling", id);
     const index = this.todos.findIndex((todo) => todo.id === id);
     if (index !== -1) {
       const foundTodo = this.todos[index].clone();
