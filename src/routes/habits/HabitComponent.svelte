@@ -35,10 +35,6 @@
     startX = startEvent.clientX;
     scrollLeft = calendar.scrollLeft;
 
-    if (calendar) {
-      calendar.style.cursor = "grabbing";
-    }
-    
     if (!(event instanceof TouchEvent)) {
       window.addEventListener('mousemove', onMove);
       window.addEventListener('mouseup', stopDragging);
@@ -59,9 +55,6 @@
 
   function stopDragging() {
     isDragging = false;
-    if (calendar) {
-      calendar.style.cursor = isScrollable ? "grab" : "default";
-    }
     window.removeEventListener('mousemove', onMove);
     window.removeEventListener('mouseup', stopDragging);
   }
@@ -193,14 +186,6 @@
     -ms-overflow-style: none;
     
     mask-image: linear-gradient(to left, black 90%, transparent 100%);
-
-    &.grabbable {
-      cursor: grab;
-    }
-
-    &:active {
-      cursor: grabbing;
-    }
   }
   
   .calendar::-webkit-scrollbar { 

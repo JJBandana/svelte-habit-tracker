@@ -12,11 +12,13 @@
 
   let modalState = $state<boolean>(false);
   let foundHabit: Habit | undefined = $state();
+  let showCalendar = $state(false);
 
   const toggleEdit = (id: number) => {
     foundHabit = habitState.habits.find((habit) => habit.id === id)?.clone();
     if (foundHabit) {
       modalState = true;
+      showCalendar = false;
     }
   };
 
@@ -74,13 +76,14 @@
         </div>
       {/if}
       <div class="modal-actions">
-        <!-- Calendar button is purely visual toggle in this context or placeholder, keep styled -->
-        <button class="button secondary" onclick={(e) => e.preventDefault()}>Calendar View</button>
+        <button class="button secondary" onclick={(e) => { e.preventDefault(); showCalendar = !showCalendar; }}>
+          {showCalendar ? 'Hide Calendar' : 'Show Calendar'}
+        </button>
         <button type="submit" class="button primary">Save Changes</button>
       </div>
     </form>
 
-    {#if foundHabit}
+    {#if foundHabit && showCalendar}
       <div class="calendar-wrapper">
         <Calendar {foundHabit} />
       </div>
@@ -178,6 +181,10 @@
     gap: 16px;
     width: 100%;
     margin-top: 32px;
+  }
+  
+  .habits > :global(*:last-child:nth-child(odd)) {
+    grid-column: 1 / -1;
   }
 
   .title {
