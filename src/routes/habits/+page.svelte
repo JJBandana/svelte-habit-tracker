@@ -94,20 +94,37 @@
 
 <style>
   .container {
-    width: 70%;
-    margin: 40px auto;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
   }
 
   .habits {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 8px; /* Increased gap slightly */
     align-items: center;
+    width: 100%;
 
     margin-top: 20px;
   }
 
   .title {
     font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 600px) {
+    .title {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .container {
+      padding-top: 1rem;
+    }
   }
 </style>

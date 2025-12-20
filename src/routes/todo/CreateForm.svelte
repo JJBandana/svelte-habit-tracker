@@ -30,26 +30,47 @@
     display: flex;
     flex-direction: row;
     justify-content: stretch;
-    gap: 8px;
+    gap: 12px;
+    margin-bottom: 24px;
 
     input[type="text"] {
-      color: white;
-      border: 1px solid rgb(90, 90, 90);
-      font-size: 1.3rem;
-      padding-block: 6px;
-      width: 100%;
-      border-radius: 8px;
-      padding-left: 20px;
-      background-color: rgb(35, 35, 35);
+      flex: 1;
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      background-color: var(--bg-surface);
+      transition: all 0.2s ease;
+
+      &::placeholder {
+        color: var(--text-muted);
+      }
 
       &:focus {
-        outline: rgb(161, 78, 245) 2px solid;
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
       }
     }
 
     button.button {
       max-height: none;
-      padding-inline: 10px;
+      padding-inline: 16px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      font-weight: 600;
+      
+      &:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.3);
+      }
+      
+      &:active {
+        transform: translateY(0);
+      }
     }
   }
 </style>

@@ -134,42 +134,58 @@
 
   .buttons {
     display: flex;
-    gap: 6px;
+    gap: 8px;
   }
 
   .container {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center; 
     height: min-content;
+    margin-bottom: 16px; 
 
     h1 {
-      margin-left: 4px;
+      margin-left: 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-main);
     }
   }
 
   .habit {
-    background-color: #00161d;
-    color: white;
-    border: #001e27 solid 2px;
-    border-radius: 10px;
-    padding: 10px;
-    width: 100%;
-    max-width: fit-content;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px; 
+    width: 100%; 
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .habit:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border-color: var(--border-hover);
   }
 
   .calendar {
-    padding: 4px;
-    background-color: #00161d;
+    padding: 0;
+    background-color: transparent;
     display: grid;
     grid-auto-flow: column;
-    grid-template-rows: repeat(7, 14px);
-    grid-template-columns: 14px;
-    grid-auto-columns: 14px;
-    gap: 2px;
-    overflow-x: hidden;
+    grid-template-rows: repeat(7, 12px); /* Slightly smaller squares for cleaner look */
+    grid-template-columns: 12px;
+    grid-auto-columns: 12px;
+    gap: 4px; /* More breathing room */
+    overflow-x: auto; /* Allow scroll */
     width: 100%;
     cursor: default;
+    
+    /* Hide scrollbar */
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+    
+    /* Fade mask for edges */
+    mask-image: linear-gradient(to right, black 90%, transparent 100%);
 
     &.grabbable {
       cursor: grab;
@@ -179,20 +195,27 @@
       cursor: grabbing;
     }
   }
+  
+  .calendar::-webkit-scrollbar { 
+    display: none; 
+  }
 
   .day {
-    background-color: #004055;
-    border-radius: 3px;
-    width: 14px;
-    height: 14px;
-    border: #004f69 solid 1px;
-    transition-property: background-color, border;
-    transition-duration: 0.3s;
-    transition-timing-function: ease-in-out;
+    background-color: var(--bg-surface-hover);
+    border-radius: 2px;
+    width: 12px;
+    height: 12px;
+    border: none;
+    transition: all 0.2s ease;
+  }
+
+  .day:hover {
+    transform: scale(1.2);
+    z-index: 10;
   }
 
   .day.on {
-    background-color: #0099cc;
-    border: #00bfff solid 1px;
+    background-color: var(--primary);
+    box-shadow: 0 0 8px rgba(139, 92, 246, 0.4); /* Glow effect */
   }
 </style>

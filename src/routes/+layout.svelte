@@ -24,8 +24,28 @@
 
 <style>
   :global {
+    :root {
+      /* Color Palette (Modern Dark Theme) */
+      --bg-body: #09090b;       /* Very dark base */
+      --bg-surface: #18181b;    /* Slightly lighter surface */
+      --bg-surface-hover: #27272a;
+      --border: #27272a;        /* Subtle borders */
+      --border-hover: #3f3f46;
+      
+      --primary: #8b5cf6;       /* Violet accent */
+      --primary-hover: #7c3aed;
+      --danger: #ef4444;
+      
+      --text-main: #fafafa;
+      --text-muted: #a1a1aa;
+      
+      --radius: 12px;
+      --radius-sm: 6px;
+    }
+
     * {
       font-family:
+        "Inter",
         system-ui,
         -apple-system,
         BlinkMacSystemFont,
@@ -40,67 +60,150 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
     }
 
     body {
-      margin-left: 4rem;
-      background-color: rgb(30, 30, 30);
-      color: white;
+      margin-left: 4.5rem; /* Increased slightly for breathing room */
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.6;
     }
 
-    a:visited {
-      color: black;
+    a {
+      text-decoration: none;
+      color: inherit;
     }
 
-    .svg-btn {
-      box-sizing: content-box;
-      padding: 6px;
-      background-color: aliceblue;
-      width: 24px;
-      height: 24px;
-      border-radius: 15px;
-      border: none;
-      cursor: pointer;
+    /* Modern Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-body);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-hover);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-muted);
     }
 
+    /* Global Button Styles */
     .button {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-
-      font-size: 1rem;
-      line-height: 1.5;
-      box-sizing: content-box;
-      border: none;
-      min-width: 24px;
-      max-height: 24px;
-      padding: 4px;
-      border-radius: 8px;
+      justify-content: center;
+      gap: 8px;
+      
+      font-size: 0.9rem;
+      font-weight: 500;
+      line-height: 1;
+      
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background-color: var(--bg-surface);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      
       &:hover {
-        background-color: red;
-        color: white;
-        cursor: pointer;
+        background-color: var(--bg-surface-hover);
+        color: var(--text-main);
+        border-color: var(--border-hover);
+      }
+      
+      &:active {
+        transform: scale(0.98);
       }
     }
   }
 
+  /* Sidebar / Navigation */
   .header {
     height: 100vh;
-    width: 3rem;
-    background-color: rgb(40, 40, 40);
+    width: 4.5rem;
+    background-color: var(--bg-surface);
     display: flex;
     flex-direction: column;
-    position: absolute;
+    position: fixed;
     left: 0;
     top: 0;
     bottom: 0;
-    padding-block: 8px;
+    padding-block: 24px;
+    z-index: 100;
+    border-right: 1px solid var(--border);
   }
 
   nav {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 24px;
     align-items: center;
+    width: 100%;
+  }
+
+  .svg-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px; /* Softer squares (Squircle-ish) */
+    background-color: transparent;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+  }
+
+  .svg-btn:hover {
+    background-color: var(--bg-surface-hover);
+    color: var(--primary);
+  }
+  
+  /* Active state simulation (you might want to add real active states later) */
+  .svg-btn:active {
+    background-color: var(--bg-surface-hover);
+    transform: scale(0.95);
+  }
+
+  /* Mobile Responsive Styles */
+  @media (max-width: 600px) {
+    :global(body) {
+      margin-left: 0;
+      margin-bottom: 5rem; /* Space for bottom nav */
+    }
+
+    .header {
+      height: 4rem;
+      width: 100%;
+      flex-direction: row;
+      bottom: 0;
+      top: auto;
+      border-right: none;
+      border-top: 1px solid var(--border);
+      padding-block: 0;
+      justify-content: space-around; /* Distribute items evenly */
+      background-color: rgba(24, 24, 27, 0.95); /* Slight transparency/blur */
+      backdrop-filter: blur(10px);
+    }
+
+    nav {
+      flex-direction: row;
+      gap: 0;
+      justify-content: space-around;
+      align-items: center;
+      padding-top: 0;
+      width: 100%;
+      max-width: 400px; /* Prevent spreading too wide on tablets */
+    }
+    
+    .svg-btn {
+      width: 48px;
+      height: 48px;
+    }
   }
 </style>

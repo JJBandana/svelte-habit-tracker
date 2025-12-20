@@ -155,29 +155,39 @@
 
 <style>
   .container {
-    width: 70%;
-    margin: 40px auto;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
   }
 
   .svg {
     background: none;
     border: none;
-    color: white;
+    color: var(--text-muted);
     cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+  }
+  
+  .svg:hover {
+    color: var(--primary);
   }
 
   .todo-section {
     display: flex;
     flex-direction: column;
-
     align-items: center;
+    width: 100%;
   }
 
   .list {
     display: flex;
     flex-direction: column;
-
-    gap: 8px;
+    gap: 12px;
     width: 100%;
   }
 
@@ -188,20 +198,69 @@
     align-items: center;
 
     width: 100%;
-    height: 52px;
-    padding: 8px;
+    min-height: 56px;
+    padding: 8px 16px;
 
-    border-radius: 8px;
-    background-color: rgb(40, 40, 40);
-    border: 1px solid rgb(90, 90, 90);
+    border-radius: var(--radius);
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border);
+    transition: all 0.2s ease;
+    
+    /* Subtle hover lift */
+    &:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+  }
+  
+  .todo-item p {
+    flex: 1;
+    margin: 0 16px;
+    font-size: 1rem;
+    color: var(--text-main);
+    word-break: break-word;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
   }
 
   h4 {
     align-self: flex-start;
-    margin-top: 20px;
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .habit-section {
+    width: 100%;
   }
 
   .title {
-    font-size: 3rem;
+    font-size: 2.5rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 2rem;
+    background: linear-gradient(to right, var(--text-main), var(--text-muted));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  @media (max-width: 600px) {
+    .title {
+      font-size: 2rem;
+    }
+    
+    .container {
+      padding-top: 2rem;
+      padding-bottom: 6rem; /* Space for bottom nav */
+    }
   }
 </style>
