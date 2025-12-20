@@ -109,51 +109,110 @@
 </div>
 
 <style>
-  .days {
-    display: grid;
-    grid-template-columns: repeat(7, 30px);
-    grid-template-rows: 30px;
-    grid-auto-rows: 30px;
-    gap: 6px;
-    justify-items: center;
-    align-items: center;
-  }
-
   .datepicker {
-    background-color: dimgray;
-    width: max-content;
-    padding: 6px;
-    border-radius: 5px;
-  }
-
-  .day {
-    background-color: hsl(0, 0%, 75%);
-    border-radius: 5px;
+    background-color: transparent;
     width: 100%;
-    height: 100%;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 30px;
-    border: none;
-    font-weight: 600;
-  }
-
-  .current {
-    background-color: hsl(0, 0%, 90%);
-    cursor: pointer;
-  }
-
-  .done {
-    background-color: hsl(120, 80%, 40%);
-    color: white;
-  }
-
-  button.done[disabled] {
-    background-color: hsl(120, 25%, 50%);
+    max-width: 400px;
+    margin: 0 auto;
   }
 
   .datepicker-header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 0 8px;
+  }
+
+  .datepicker-header span {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-main);
+    text-transform: capitalize;
+  }
+
+  .datepicker-header button {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+  }
+
+  .datepicker-header button:hover:not(:disabled) {
+    background-color: var(--bg-surface-hover);
+    color: var(--text-main);
+    border-color: var(--border-hover);
+  }
+
+  .datepicker-header button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    justify-items: center;
+    align-items: center;
+  }
+
+  .days span {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .day {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background-color: transparent;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .current {
+    background-color: var(--bg-surface-hover);
+    color: var(--text-main);
+    cursor: pointer;
+  }
+
+  .current:hover {
+    background-color: var(--border-hover);
+    transform: scale(1.1);
+  }
+
+  .done {
+    background-color: var(--primary);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+  }
+
+  .done:hover {
+    background-color: var(--primary-hover);
+  }
+
+  button:disabled {
+    opacity: 0.2;
+    cursor: default;
+    background-color: transparent;
+  }
+  
+  button.done[disabled] {
+    background-color: var(--bg-surface-hover);
+    color: var(--text-muted);
+    box-shadow: none;
   }
 </style>

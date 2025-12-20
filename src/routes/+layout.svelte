@@ -25,14 +25,13 @@
 <style>
   :global {
     :root {
-      /* Color Palette (Modern Dark Theme) */
-      --bg-body: #09090b;       /* Very dark base */
-      --bg-surface: #18181b;    /* Slightly lighter surface */
+      --bg-body: #09090b;
+      --bg-surface: #18181b;
       --bg-surface-hover: #27272a;
-      --border: #27272a;        /* Subtle borders */
+      --border: #27272a;
       --border-hover: #3f3f46;
       
-      --primary: #8b5cf6;       /* Violet accent */
+      --primary: #8b5cf6;
       --primary-hover: #7c3aed;
       --danger: #ef4444;
       
@@ -64,7 +63,7 @@
     }
 
     body {
-      margin-left: 4.5rem; /* Increased slightly for breathing room */
+      margin-left: 4.5rem;
       background-color: var(--bg-body);
       color: var(--text-main);
       min-height: 100vh;
@@ -76,7 +75,6 @@
       color: inherit;
     }
 
-    /* Modern Scrollbar */
     ::-webkit-scrollbar {
       width: 8px;
     }
@@ -91,7 +89,6 @@
       background: var(--text-muted);
     }
 
-    /* Global Button Styles */
     .button {
       display: inline-flex;
       align-items: center;
@@ -122,7 +119,6 @@
     }
   }
 
-  /* Sidebar / Navigation */
   .header {
     height: 100vh;
     width: 4.5rem;
@@ -152,7 +148,7 @@
     justify-content: center;
     width: 42px;
     height: 42px;
-    border-radius: 12px; /* Softer squares (Squircle-ish) */
+    border-radius: 12px;
     background-color: transparent;
     color: var(--text-muted);
     transition: all 0.2s ease;
@@ -164,17 +160,15 @@
     color: var(--primary);
   }
   
-  /* Active state simulation (you might want to add real active states later) */
   .svg-btn:active {
     background-color: var(--bg-surface-hover);
     transform: scale(0.95);
   }
 
-  /* Mobile Responsive Styles */
   @media (max-width: 600px) {
     :global(body) {
       margin-left: 0;
-      margin-bottom: 5rem; /* Space for bottom nav */
+      margin-bottom: 5rem;
     }
 
     .header {
@@ -186,8 +180,8 @@
       border-right: none;
       border-top: 1px solid var(--border);
       padding-block: 0;
-      justify-content: space-around; /* Distribute items evenly */
-      background-color: rgba(24, 24, 27, 0.95); /* Slight transparency/blur */
+      justify-content: space-around;
+      background-color: rgba(24, 24, 27, 0.95);
       backdrop-filter: blur(10px);
     }
 
@@ -198,7 +192,7 @@
       align-items: center;
       padding-top: 0;
       width: 100%;
-      max-width: 400px; /* Prevent spreading too wide on tablets */
+      max-width: 400px;
     }
     
     .svg-btn {

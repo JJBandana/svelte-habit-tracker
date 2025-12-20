@@ -43,6 +43,7 @@
     justify-content: stretch;
     gap: 12px;
     margin-bottom: 24px;
+    width: 100%;
 
     input[type="text"] {
       flex: 1;
@@ -53,6 +54,7 @@
       border-radius: var(--radius-sm);
       background-color: var(--bg-surface);
       transition: all 0.2s ease;
+      min-width: 0;
 
       &::placeholder {
         color: var(--text-muted);
@@ -67,11 +69,12 @@
 
     button.button {
       max-height: none;
-      padding-inline: 16px;
+      padding-inline: 20px;
       background-color: var(--primary);
       color: white;
       border: none;
       font-weight: 600;
+      white-space: nowrap;
       
       &:hover {
         background-color: var(--primary-hover);
@@ -82,6 +85,18 @@
       &:active {
         transform: translateY(0);
       }
+    }
+  }
+
+  @media (max-width: 480px) {
+    form {
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    button.button {
+      width: 100%;
+      height: 48px;
     }
   }
 </style>

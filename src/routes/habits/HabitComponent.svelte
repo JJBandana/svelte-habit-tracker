@@ -28,24 +28,31 @@
   };
 
   function startDrag(event: MouseEvent | TouchEvent) {
-    if (!calendar || !isScrollable) return;
+    if (!calendar) return;
 
     isDragging = true;
     const startEvent = event instanceof TouchEvent ? event.touches[0] : event;
-    startX = startEvent.pageX - calendar.offsetLeft;
+    startX = startEvent.clientX;
     scrollLeft = calendar.scrollLeft;
 
     if (calendar) {
-      calendar.style.cursor = event instanceof TouchEvent ? "" : "grabbing";
+      calendar.style.cursor = "grabbing";
+    }
+    
+    if (!(event instanceof TouchEvent)) {
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', stopDragging);
     }
   }
 
   function onMove(event: MouseEvent | TouchEvent) {
     if (!isDragging || !calendar) return;
 
-    event.preventDefault();
+    // Prevent default only if we are actually dragging to avoid blocking other interactions
+    // event.preventDefault(); 
+    
     const moveEvent = event instanceof TouchEvent ? event.touches[0] : event;
-    const x = moveEvent.pageX - calendar.offsetLeft;
+    const x = moveEvent.clientX;
     const walk = x - startX;
     calendar.scrollLeft = scrollLeft - walk;
   }
@@ -55,6 +62,8 @@
     if (calendar) {
       calendar.style.cursor = isScrollable ? "grab" : "default";
     }
+    window.removeEventListener('mousemove', onMove);
+    window.removeEventListener('mouseup', stopDragging);
   }
 
   function focusDay(date: string) {
@@ -75,6 +84,7 @@
 
   onMount(() => {
     checkScrollable();
+    setTimeout(checkScrollable, 100);
 
     if (calendar) {
       calendar.scrollLeft = calendar.scrollWidth;
@@ -111,10 +121,7 @@
     class="calendar"
     class:grabbable={isScrollable}
     bind:this={calendar}
-    onmouseup={stopDragging}
-    onmouseleave={stopDragging}
     onmousedown={startDrag}
-    onmousemove={onMove}
     ontouchstart={startDrag}
     ontouchmove={onMove}
     ontouchend={stopDragging}
@@ -159,6 +166,7 @@
     border-radius: var(--radius);
     padding: 20px; 
     width: 100%; 
+    min-width: 0;
     transition: transform 0.2s, box-shadow 0.2s;
   }
   
@@ -172,20 +180,19 @@
     background-color: transparent;
     display: grid;
     grid-auto-flow: column;
-    grid-template-rows: repeat(7, 12px); /* Slightly smaller squares for cleaner look */
+    grid-template-rows: repeat(7, 12px);
     grid-template-columns: 12px;
     grid-auto-columns: 12px;
-    gap: 4px; /* More breathing room */
-    overflow-x: auto; /* Allow scroll */
+    gap: 4px;
+    overflow-x: hidden;
     width: 100%;
     cursor: default;
+    user-select: none;
     
-    /* Hide scrollbar */
     scrollbar-width: none; 
     -ms-overflow-style: none;
     
-    /* Fade mask for edges */
-    mask-image: linear-gradient(to right, black 90%, transparent 100%);
+    mask-image: linear-gradient(to left, black 90%, transparent 100%);
 
     &.grabbable {
       cursor: grab;
@@ -216,6 +223,6 @@
 
   .day.on {
     background-color: var(--primary);
-    box-shadow: 0 0 8px rgba(139, 92, 246, 0.4); /* Glow effect */
+    box-shadow: 0 0 8px rgba(139, 92, 246, 0.4);
   }
 </style>

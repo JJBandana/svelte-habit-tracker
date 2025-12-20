@@ -66,17 +66,24 @@
   <CreateForm {habitState} />
 
   <Modal2 bind:modalState>
-    <form method="dialog" {onsubmit}>
+    <form method="dialog" {onsubmit} class="edit-form">
       {#if foundHabit}
-        <input type="text" bind:value={foundHabit.name} />
+        <div class="input-group">
+          <label for="habit-name">Habit Name</label>
+          <input type="text" id="habit-name" bind:value={foundHabit.name} placeholder="Enter habit name" />
+        </div>
       {/if}
-      <button type="submit">Submit</button>
-      <button onclick={(e) => e.preventDefault()}>Calendar</button>
-      <!-- TO-DO ⬆️⬆️⬆️ calendar btn -->
+      <div class="modal-actions">
+        <!-- Calendar button is purely visual toggle in this context or placeholder, keep styled -->
+        <button class="button secondary" onclick={(e) => e.preventDefault()}>Calendar View</button>
+        <button type="submit" class="button primary">Save Changes</button>
+      </div>
     </form>
 
     {#if foundHabit}
-      <Calendar {foundHabit} />
+      <div class="calendar-wrapper">
+        <Calendar {foundHabit} />
+      </div>
     {/if}
   </Modal2>
 
@@ -95,36 +102,119 @@
 <style>
   .container {
     width: 100%;
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
-    padding: 2rem 1rem;
+    padding: 3rem 1.5rem;
+    padding-bottom: 6rem;
+  }
+  
+  .edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .input-group label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+
+  .edit-form input[type="text"] {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    font-size: 1rem;
+    transition: all 0.2s;
+  }
+
+  .edit-form input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+  }
+
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  
+  .button.primary {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+  }
+  
+  .button.primary:hover {
+    background-color: var(--primary-hover);
+  }
+  
+  .button.secondary {
+    background-color: transparent;
+    border: 1px solid var(--border);
+  }
+
+  .calendar-wrapper {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
   }
 
   .habits {
-    display: flex;
-    flex-direction: column;
-    gap: 8px; /* Increased gap slightly */
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
     width: 100%;
-
-    margin-top: 20px;
+    margin-top: 32px;
   }
 
   .title {
-    font-size: 3rem;
-    font-weight: 700;
+    font-size: 2.5rem;
+    font-weight: 800;
     text-align: center;
     margin-bottom: 2rem;
+    letter-spacing: -0.02em;
+    background: linear-gradient(to bottom right, var(--text-main), var(--text-muted));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  @media (max-width: 800px) {
+    .habits {
+      grid-template-columns: 1fr;
+    }
   }
 
   @media (max-width: 600px) {
     .title {
       font-size: 2rem;
       margin-bottom: 1.5rem;
+      text-align: left;
     }
     
     .container {
-      padding-top: 1rem;
+      padding: 1.5rem 1rem;
+      padding-bottom: 8rem;
+    }
+    
+    .modal-actions {
+      flex-direction: column-reverse;
+    }
+    
+    .button {
+      width: 100%;
     }
   }
 </style>
