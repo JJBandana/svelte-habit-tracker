@@ -51,7 +51,15 @@ export class TodoState {
   }
 
   update(todo: Todo) {
-    this.todos[todo.id] = todo;
+    const index = this.todos.findIndex((t) => t.id === todo.id);
+    if (index !== -1) {
+      this.todos[index] = todo;
+    }
+  }
+
+  reorder(fromIndex: number, toIndex: number) {
+    const [movedItem] = this.todos.splice(fromIndex, 1);
+    this.todos.splice(toIndex, 0, movedItem);
   }
 }
 

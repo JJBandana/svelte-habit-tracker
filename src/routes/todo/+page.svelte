@@ -9,6 +9,9 @@
   import Edit from "../../icons/Edit.svelte";
   import Check from "../../icons/Check.svelte";
   import Circle from "../../icons/Circle.svelte";
+  import Grip from "../../icons/Grip.svelte";
+  import { flip } from "svelte/animate";
+  import { cubicOut } from "svelte/easing";
 
   interface ITodo {
     id: number;
@@ -37,6 +40,60 @@
     if (index !== -1) todoState.todos[index] = foundTodo;
     modalState = false;
   };
+
+  // Drag and Drop Logic
+  let draggingIndex = $state<number | null>(null);
+
+  function onDragStart(e: DragEvent, index: number) {
+    if (!e.dataTransfer) return;
+    draggingIndex = index;
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.dropEffect = "move";
+    e.dataTransfer.setData("text/plain", index.toString());
+  }
+
+  function onDragOver(e: DragEvent, index: number) {
+    e.preventDefault();
+    if (draggingIndex === null || draggingIndex === index) return;
+    
+    // Optimistic UI update
+    todoState.reorder(draggingIndex, index);
+    draggingIndex = index;
+  }
+
+  function onDrop(e: DragEvent) {
+    draggingIndex = null;
+  }
+
+  // Mobile Touch Logic
+  function onTouchStart(e: TouchEvent, index: number) {
+    draggingIndex = index;
+    document.body.style.overflow = "hidden"; // Lock scroll
+  }
+
+  function onTouchMove(e: TouchEvent) {
+    if (draggingIndex === null) return;
+    
+    // Prevent default scrolling behavior
+    if (e.cancelable) e.preventDefault();
+
+    const touch = e.touches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+    const row = target?.closest(".todo-item") as HTMLElement;
+
+    if (row && row.dataset.index) {
+      const newIndex = parseInt(row.dataset.index);
+      if (!isNaN(newIndex) && newIndex !== draggingIndex) {
+        todoState.reorder(draggingIndex, newIndex);
+        draggingIndex = newIndex;
+      }
+    }
+  }
+
+  function onTouchEnd() {
+    draggingIndex = null;
+    document.body.style.overflow = ""; // Unlock scroll
+  }
 
   $effect(() => {
     const savedTodos = localStorage.getItem("todos");
@@ -135,8 +192,30 @@
     <h4>Tasks</h4>
 
     <div class="todos list">
-      {#each todoState.todos as todo}
-        <div class="todo-item" class:completed={todo.completed}>
+      {#each todoState.todos as todo, index (todo.id)}
+        <div
+          class="todo-item"
+          class:completed={todo.completed}
+          class:dragging={draggingIndex === index}
+          data-index={index}
+          animate:flip={{ duration: 200, easing: cubicOut }}
+          draggable={true}
+          ondragstart={(e) => onDragStart(e, index)}
+          ondragover={(e) => onDragOver(e, index)}
+          ondrop={onDrop}
+          role="listitem"
+        >
+          <div
+            class="drag-handle"
+            role="button"
+            tabindex="0"
+            ontouchstart={(e) => onTouchStart(e, index)}
+            ontouchmove={onTouchMove}
+            ontouchend={onTouchEnd}
+          >
+            <Grip />
+          </div>
+
           <button class="svg" onclick={() => todoState.toggle(todo.id)}>
             {#if todo.completed}
               <Check />
@@ -363,5 +442,28 @@
     .edit-form {
       min-width: 100%;
     }
+  }
+
+  .drag-handle {
+    display: flex;
+    align-items: center;
+    color: var(--text-muted);
+    cursor: grab;
+    padding: 8px; /* Match svg padding */
+    margin-right: 4px;
+    touch-action: none;
+  }
+
+  .drag-handle:active {
+    cursor: grabbing;
+    color: var(--primary);
+  }
+
+  .todo-item.dragging {
+    opacity: 0.5;
+    background: var(--bg-surface-hover);
+    border-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 10;
   }
 </style>
